@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Han Dynasty Jeopardy</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // -----------------------------
+        // Data model
+        // -----------------------------
+
+        const CATEGORIES = [
+          {
+            id: "rise",
+            title: "Rise to Power",
+            clues: [
+              {
+                value: 200,
+                prompt:
+                  "Identify the lowly leader who defeated rivals following the fall of the Qin, gained widespread support by promising stability and moderation, and established a new imperial line renowned for its more resilient institutions and softer political style. Later on, he was Emperor Gaozu. Who was he?",
+                response: "Who is Liu Bang?",
+                explanationVideo: "1.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "Started out as a rebel commander and low-ranking official after the Qin dynasty.",
+                  "Coalition building, policy moderation, and a reputation for pragmatism were necessary for success.",
+                  "He gained the trust of both local elites and commoners by influencing the centralization of the Qin dynasty and separating from the most severe regulations.",
+                  "Restoring order gave legitimacy, and Liu Bang personifies this change.",
+                  "Legitimacy through stability plus practical centralization that transformed a rebel coalition into a long-lasting imperial base equals power."
+                ],
+              },
+              {
+                value: 400,
+                prompt:
+                  "A crucial Qin era structure was retained by the new rulers following unification. Selection increasingly rewarded merit through training, evaluations, and promotion for competent local talent. Provinces were set up as centrally supervised commanderies with appointed officials, a clear chain of reporting, standardized procedures, and frequent audits. Identify this administrative model that created manageable units out of a vast realm.",
+                response: "What is a centralized commandery based bureaucracy?",
+                explanationVideo: "2.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The foundation of the Han government was its commanderies.",
+                  "The central court appointed officials with a focus on merit.",
+                  "Predictable governance and simpler crisis mobilization were made possible by expansion.",
+                  "Prior to formal exams, advancement was determined by ability rather than birth.",
+                  "Power is equal to standardization plus merit-based staffing, which enables the center to coordinate troops, laws, and taxes across long distances."
+                ],
+              },
+              {
+                value: 600,
+                prompt:
+                  "The early Han combined a humanizing ideology that promoted moderation, virtue, and filial piety with legalist-style governance. This moral framework justified strong central authority while providing rulers with a language of duty. Identify the philosophy that the court advanced in order to convert control into consent.",
+                response: "What is Confucianism?",
+                explanationVideo: "3.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The classics of Confucianism presented rule as a moral endeavor.",
+                  "Officials read texts and modeled loyalty, propriety, and human concern.",
+                  "Education evolved into a route to the workplace for legalist organizations with Confucian legitimacy.",
+                  "Because of these two, imperial rule became widely accepted, morally upright, and orderly.",
+                  "Power is the result of combining bureaucratic control with moral consent to transform obedience into a shared civic obligation."
+                ],
+              },
+              {
+                value: 800,
+                prompt:
+                  "The local administration map was completed during consolidation. As the population grew and the frontiers expanded, these districts increased from a few dozen to over eighty. Identify the territorial divisions that show the empire's progress toward integration.",
+                response: "What are commanderies?",
+                explanationVideo: "4.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The empire's institutional reach expanded with more commanderies.",
+                  "Each established centralized control over households, taxes, conscription, and courts.",
+                  "Roads, garrisons, and officials were all coordinated by commanderies.",
+                  "The expansion is a sign of expanding state power and territorial dominance."
+                ],
+              },
+              {
+                value: 1000,
+                prompt:
+                  "Typically, the dynasty is split into two protracted periods, each with its own capital. Determine which seat anchored court life, archives, and ritual: the western phase seat and the later eastern phase seat. Give the names of both cities.",
+                response: "What are Chang'an and Luoyang?",
+                explanationVideo: "5.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The political and ceremonial center was Chang'an; Luoyang eventually emerged as the capital.",
+                  "Capitals served as centers for recruitment, scholarship, crafts, taxation, and storage.",
+                  "Through courier roads, court customs and legal codes were dispersed.",
+                  "Pressures from the frontier and strategic geography led to the capital's relocation.",
+                  "Examining the capitals reveals adaptation and continuity over four centuries."
+                ],
+              },
+            ],
+          },
+          {
+            id: "maintain",
+            title: "Maintaining Power",
+            clues: [
+              {
+                value: 200,
+                prompt:
+                  "Imperial officials were paid according to state granaries and agricultural output. This stabilized wages during coin shortages and connected service to the food supply. What was the standard unit of measurement for salaries?",
+                response: "What is grain?",
+                explanationVideo: "6.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "Grain payments to officials connected the rural economy and administration.",
+                  "Granaries balanced local surpluses and shortages.",
+                  "In situations where currency was scarce or unreliable, payment in kind decreased volatility.",
+                  "It served as a reminder to officials that infrastructure and harvests were essential to good governance.",
+                  "As a result, administrative dependability and loyalty were transformed from agricultural strength.",
+                  "Power equates to financial stability: Food-backed salaries kept the machine running in coin shocks and bound officials to state granaries."
+                ],
+              },
+              {
+                value: 400,
+                prompt:
+                  "The long-lasting governing formula blended a moral curriculum that instilled loyalty and harmony with a Legalist toolkit of institutions and laws. Identify the moral code that made bureaucratic control a common civic ideal and a path to political power for the well-educated.",
+                response: "What is Confucian ethics?",
+                explanationVideo: "7.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "Officials shared a common language and culture thanks to Confucian education.",
+                  "Proficiency in history, ritual, and classics aided in assessing talent and interacting with elites.",
+                  "Despite corruption, it reaffirmed behavior, filial piety, and concern for the populace.",
+                  "The Han were able to enforce obedience while posing as defenders of law and order thanks to the system.",
+                  "Power = elite alignment: a service culture established by shared education regulated expectations and behavior throughout the bureaucracy."
+                ],
+              },
+              {
+                value: 600,
+                prompt:
+                  "The court used a combination of punishment expeditions, garrisons, walls, and marriage diplomacy with steppe confederations like the Xiongnu on the northern and western frontiers. What was the actual name of this combination approach, particularly the policy of peace through marital alliances?",
+                response: "What is heqin and the wider Han strategy toward the Xiongnu?",
+                explanationVideo: "8.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The court employed a combination of mobile columns, garrisons, walls, and marriage diplomacy with Xiongnu leaders on the steppe frontiers.",
+                  "Predictable peace windows were exchanged for gifts and prestige in Heqin marriages.",
+                  "Control of the Central Asian corridors maintained the flow of information, horses, and caravans to the core.",
+                  "Reducing border volatility and safeguarding income without needless campaigns was the aim.",
+                  "Here, power equates to adaptability: use coercion when necessary, make accommodations when beneficial."
+                ],
+              },
+              {
+                value: 800,
+                prompt:
+                  "Two landmark histories shaped how the state remembered itself. Using biographies and annals, one examined all previous eras. The other organized lives to emphasize moral lessons and concentrated on the current dynasty. List the two pieces along with their creators.",
+                response: "What are Sima Qian's Shiji and Ban Gu's Han Shu?",
+                explanationVideo: "9.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The two histories, Shiji and Han Shu, became part of the state's memory toolkit.",
+                  "Ban Gu customized it for the Former Han after Sima Qian established the model with annals, biographies, tables, and treatises.",
+                  "Examining actual cases taught officials what \"good governance\" looked like.",
+                  "History as instruction: instances of ethics, policies, achievements, and failures",
+                  "Here, power consists of narrative control that establishes norms and socializes elites."
+                ],
+              },
+              {
+                value: 1000,
+                prompt:
+                  "Silk, horses, glassware, and ideas were transported by traders and emissaries across the trans-Eurasian network. The network's name demonstrates how the dynasty used both trade and armed conflict to extend its power well beyond its borders. Which network was it?",
+                response: "What is the Silk Road?",
+                explanationVideo: "10.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The Han were connected to markets in the far west and Inner Asia by the Silk Road.",
+                  "Silk, horses, glass, music, ideas, and taxes were all transported by caravans.",
+                  "Imperial reach was advertised through staging posts and safe passes without annexing everything.",
+                  "Trade increased income and status as clients and allies converged on common interests.",
+                  "Here, power translates into a gentle influence on logistics and consistent communication."
+                ],
+              },
+            ],
+          },
+          {
+            id: "display",
+            title: "Displaying Power",
+            clues: [
+              {
+                value: 200,
+                prompt:
+                  "Glossy cups and trays that hold up after two thousand years are among the items found in excavated tombs. Layers of refined sap, meticulous curing, and exquisite decoration were all necessary for the craft. Identify this high-end technology that represented wealth, expertise, and courtly taste.",
+                response: "What is lacquerware?",
+                explanationVideo: "11.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "High-skilled workshops, lengthy curing periods, and a durable, glossy finish are all associated with lacquerware.",
+                  "Filled aristocratic tombs, circulated as gifts and tributes, and demonstrated sophisticated taste.",
+                  "Demonstrated the center's ability to coordinate supplies and craftspeople across geographical boundaries.",
+                  "These artifacts asserted the permanence of rank and ancestry in burial.",
+                  "Here, power is cultural leadership that denotes mastery of style and craft."
+                ],
+              },
+              {
+                value: 400,
+                prompt:
+                  "Writing material innovation increased bureaucratic learning and memory. Compared to bamboo slips, it was easier to store and less expensive than silk. Name the technology that aided in the expansion of scholarship and administration.",
+                response: "What is paper?",
+                explanationVideo: "12.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "Compared to silk and bamboo slips, paper was less expensive for record keeping.",
+                  "Orders, tax rolls, and archives that were proportionate to the state's size",
+                  "Wider training for prospective officials was made possible by more copies of the classics.",
+                  "Cheaper, quicker paperwork translates into cheaper, quicker governance.",
+                  "Here, power is the information flow that maintains the synchronization of a large map."
+                ],
+              },
+              {
+                value: 600,
+                prompt:
+                  "In addition to organizing performances for banquets and rituals, a specialized office at court gathered and described instruments, methods, and songs. Identify this bureau that demonstrates how music strengthened ceremony and authority.",
+                response: "What is the Music Bureau, or Yuefu?",
+                explanationVideo: "13.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The Yuefu Music Bureau trained actors, organized rituals, and cataloged instruments.",
+                  "Through movement, timing, and sound, ceremonies taught hierarchy.",
+                  "Elites learned civics through banquets and sacrifices.",
+                  "The rhythm of the court was connected to distant provinces through a common repertoire.",
+                  "Here, power is literally felt as a choreographed order."
+                ],
+              },
+              {
+                value: 800,
+                prompt:
+                  "Figures, house models, and protective designs found in Han tombs suggest a paired view of the deceased. Identify the two elements that these customs aimed to protect and guide in the afterlife.",
+                response: "What are the hun and the bo?",
+                explanationVideo: "14.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "Tombs highlight two facets of the individual: bo and hun.",
+                  "Architecture, goods, and attendants were \"served\" in the afterlife as well.",
+                  "To the living, monumental funerals demonstrated wealth and authority.",
+                  "Religion gave hierarchy a sense of legitimacy rather than just utility",
+                  "Here, power is the sacred framing of status that normalizes inequality."
+                ],
+              },
+              {
+                value: 1000,
+                prompt:
+                  "In order for the center to send troops or aid, court scientists created a device that could detect distant earthquakes. Name the tool that best exemplifies the integration of engineering, state response, and observation.",
+                response: "What is the seismograph?",
+                explanationVideo: "15.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "To record distant earthquakes, court scientists constructed a seismograph.",
+                  "Early warnings enable the center to quickly deploy troops or relief.",
+                  "Response to disasters saved lives and upheld the mandate.",
+                  "Practical statecraft, not trivia, is what science at court means.",
+                  "Here, power is the technical ability to put knowledge into practice."
+                ],
+              },
+            ],
+          },
+          {
+            id: "decline",
+            title: "Decline of Power",
+            clues: [
+              {
+                value: 200,
+                prompt:
+                  "In 184 CE, a mass movement that demanded renewal under a religious banner and wore distinctive headgear was fueled by local abuses, land inequality, and fiscal pressure. Identify this internal rebellion that rocked the dynasty.",
+                response: "What is the Yellow Turban Rebellion?",
+                explanationVideo: "16.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "184 CE: The Yellow Turban movement attracts irate local elites and impoverished peasants.",
+                  "Famine, corruption, land grabs, and taxes are examples of grievances.",
+                  "Suppression of the courts depends on local generals who acquire autonomy.",
+                  "Long-term military loyalty fragmentation, short-term stability",
+                  "When capacity and consent both decline, power fails."
+                ],
+              },
+              {
+                value: 400,
+                prompt:
+                  "The dynasty reestablished itself with a new capital farther east after a brief usurpation. Identify this later stage that saw the rise of warlords and stronger aristocratic clans while maintaining institutions.",
+                response: "What is the Eastern Han?",
+                explanationVideo: "17.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "Eastern Han follows Luoyang's rules but retains the template.",
+                  "Regional armies, Eunuch factions, and great clans vie for supremacy.",
+                  "Institutions operate more on paper than in reality.",
+                  "Issued orders are not always followed.",
+                  "Power slippage results in a weaker coalition with the same structure."
+                ],
+              },
+              {
+                value: 600,
+                prompt:
+                  "The last emperor formally ceded the throne to a powerful northerner in 220 CE, who went on to establish a successor state. Name the person whose ascent signifies the beginning of a new kingdom and the end of unified Han rule.",
+                response: "Who is Cao Pi?",
+                explanationVideo: "18.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The final Han emperor cedes power to Cao Pi in 220 CE.",
+                  "Rupture is framed in the ceremony as a peaceful transfer of the mandate.",
+                  "Reality: revenue and force already in warlord hands",
+                  "New regime claims legitimacy by redefining it",
+                  "Power shift = ritual masks a structural change"
+                ],
+              },
+              {
+                value: 800,
+                prompt:
+                  "Three rival states shared power after the unity fell. Name two polities that fought for dominance in the third century and replaced the single empire.",
+                response: "What are Wei, Shu, and Wu?",
+                explanationVideo: "19.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The realm is divided into Wei, Shu, and Wu.",
+                  "Each uses Han tools to construct armies, courts, and taxes.",
+                  "For decades, no one can put everything back together.",
+                  "Administration endures as a tool that competitors use.",
+                  "Infrastructure without a single center means power is distributed."
+                ],
+              },
+              {
+                value: 1000,
+                prompt:
+                  "Describe the final process where the court relied on great clans and provincial generals for revenue and security, only to discover that these allies undermined central authority and forced partition.",
+                response: "What is warlordism and elite clan dominance?",
+                explanationVideo: "20.mp4",
+                explanation: "" ,
+                keyNotes: [
+                  "The court depends on great clans and provincial generals for financial support and security.",
+                  "Strongmen seize local government and create private armies.",
+                  "Regions over the center are served by courier roads and registries",
+                  "Temporary solutions undermine central authority.",
+                  "Endgame: Partition is inevitable due to warlordism"
+                ],
+              },
+            ],
+          },
+        ];
+
+        // -----------------------------
+        // UI helpers
+        // -----------------------------
+
+        const money = (v) => `$${v.toLocaleString()}`;
+
+        const BOARD_COLORS = {
+          bg: "bg-blue-900",
+          tile: "bg-blue-700",
+          tileHover: "hover:bg-blue-600",
+          text: "text-yellow-300",
+          tileText: "text-yellow-100",
+        };
+
+        // -----------------------------
+        // Main component
+        // -----------------------------
+
+        function HanJeopardy() {
+          const [used, setUsed] = useState({});
+          const [open, setOpen] = useState(null);
+          const [showAnswer, setShowAnswer] = useState(false);
+          const [teams, setTeams] = useState([
+            { name: "Team 1", score: 0 },
+            { name: "Team 2", score: 0 },
+          ]);
+
+          const openClue = (cat, clue) => {
+            const key = `${cat.id}-${clue.value}`;
+            if (used[key]) return; // locked
+            setOpen({ key, clue, cat });
+            setShowAnswer(false);
+          };
+
+          const award = (i, delta) => {
+            setTeams((prev) => prev.map((t, idx) => (idx === i ? { ...t, score: t.score + delta } : t)));
+          };
+
+          const updateTeamCount = (n) => {
+            setTeams((prev) => {
+              const next = prev.slice(0, n);
+              while (next.length < n) {
+                next.push({ name: `Team ${next.length + 1}`, score: 0 });
+              }
+              return next;
+            });
+          };
+
+          const lockTile = () => {
+            if (open) setUsed((u) => ({ ...u, [open.key]: true }));
+            setOpen(null);
+            setShowAnswer(false);
+          };
+
+          const resetBoard = () => {
+            setUsed({});
+            setShowAnswer(false);
+            setOpen(null);
+          };
+
+          return (
+            <div className={`min-h-screen ${BOARD_COLORS.bg} ${BOARD_COLORS.text} font-sans`}>
+              <div className="mx-auto max-w-7xl px-4 py-6">
+                <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+                  <div>
+                    <h1 className="text-3xl font-extrabold tracking-tight">Han Dynasty Jeopardy</h1>
+                    <p className="text-blue-200 mt-1 text-sm">4 categories x 5 clues. Click a tile to open. Reveal the answer then teach with the summary below.</p>
+                    <div className="mt-3 p-3 bg-blue-800/50 rounded-lg border border-blue-700/50">
+                      <p className="text-blue-100 text-xs leading-relaxed italic">
+                        <span className="font-semibold not-italic">Definition of power:</span> The capacity at which an institution can coordinate people, resources, and information at scale by combining legitimacy with organization, logistics, adaptive strategy, and cultural authority, such that compliance among followers becomes routine, the benefits emerge predictably, and the system can project its influence widespreadedly without continuous coercion.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-blue-200">Teams:</label>
+                    <select
+                      value={teams.length}
+                      onChange={(e) => updateTeamCount(parseInt(e.target.value))}
+                      className="rounded-md bg-white/10 px-2 py-1 text-white"
+                    >
+                      {[1,2,3,4,5,6].map((n) => (
+                        <option key={n} value={n}>{n}</option>
+                      ))}
+                    </select>
+                    <button onClick={resetBoard} className="rounded-lg bg-white/10 px-3 py-1.5 text-sm text-white hover:bg-white/20">Reset Board</button>
+                  </div>
+                </header>
+
+                {/* Teams */}
+                <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 mb-6">
+                  {teams.map((t, i) => (
+                    <div key={i} className="rounded-xl bg-black/20 p-3">
+                      <input
+                        value={t.name}
+                        onChange={(e) => setTeams((prev) => prev.map((x, idx) => (idx === i ? { ...x, name: e.target.value } : x)))}
+                        className="w-full rounded-md bg-black/30 px-2 py-1 text-white placeholder:text-blue-200 focus:outline-none"
+                      />
+                      <div className="mt-2 text-2xl font-bold">{money(t.score)}</div>
+                    </div>
+                  ))}
+                </section>
+
+                {/* Board */}
+                <main className="grid grid-cols-4 gap-3">
+                  {CATEGORIES.map((cat) => (
+                    <div key={cat.id} className="rounded-xl overflow-hidden border border-blue-800">
+                      <div className="bg-blue-800 p-3 text-center font-bold uppercase tracking-wide">{cat.title}</div>
+                      {cat.clues.map((clue) => {
+                        const key = `${cat.id}-${clue.value}`;
+                        const isUsed = used[key];
+                        return (
+                          <button
+                            key={key}
+                            onClick={() => openClue(cat, clue)}
+                            className={`w-full p-6 ${BOARD_COLORS.tile} ${BOARD_COLORS.tileHover} ${isUsed ? "opacity-30 cursor-not-allowed" : ""}`}
+                            disabled={isUsed}
+                            aria-label={`Play ${cat.title} for ${clue.value}`}
+                          >
+                            <span className={`text-3xl font-extrabold ${BOARD_COLORS.tileText}`}>{money(clue.value)}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </main>
+
+                {/* Modal */}
+                {open && (
+                  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-4" onClick={() => setOpen(null)}>
+                    <div className="w-full max-w-3xl rounded-2xl bg-white text-neutral-900" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center justify-between border-b px-5 py-3">
+                        <h2 className="text-lg font-semibold">{open.cat.title} {" "} {money(open.clue.value)}</h2>
+                        <button onClick={() => setOpen(null)} className="rounded-md border px-2 py-1 text-sm">Close</button>
+                      </div>
+
+                      <div className="px-5 py-4">
+                        <p className="text-xl leading-8">{open.clue.prompt}</p>
+
+                        {!showAnswer ? (
+                          <button onClick={() => setShowAnswer(true)} className="mt-4 rounded-lg bg-blue-700 px-4 py-2 text-white hover:bg-blue-600">Reveal Answer</button>
+                        ) : (
+                          <>
+                            <div className="mt-4 rounded-lg bg-green-50 border border-green-200 p-3">
+                              <div className="text-sm uppercase text-green-700 font-semibold">Expected Response</div>
+                              <div className="mt-1 text-lg">{open.clue.response}</div>
+                            </div>
+                            <div className="mt-4 rounded-lg bg-neutral-50 border p-3">
+                              <div className="text-sm uppercase text-neutral-700 font-semibold">{open.clue.explanationVideo ? "Teaching video" : "Teaching note"}</div>
+                              {open.clue.explanationVideo ? (
+                                <div className="mt-2">
+                                  <video controls preload="metadata" className="w-full rounded-lg">
+                                    <source src={open.clue.explanationVideo} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                  </video>
+                                  <div className="mt-1 text-xs text-neutral-600 break-all">
+                                    <a href={open.clue.explanationVideo} target="_blank" rel="noreferrer">Open video in new tab</a>
+                                  </div>
+                                </div>
+                              ) : (
+                                <p className="mt-1 leading-7 text-neutral-800">{open.clue.explanation}</p>
+                              )}
+                            </div>
+                            {open.clue.keyNotes && open.clue.keyNotes.length > 0 && (
+                              <div className="mt-4 rounded-lg bg-blue-50 border border-blue-200 p-4">
+                                <div className="text-sm uppercase text-blue-700 font-semibold mb-3">Key Notes</div>
+                                <ul className="space-y-2">
+                                  {open.clue.keyNotes.map((note, idx) => (
+                                    <li key={idx} className="flex items-start">
+                                      <span className="text-blue-600 mr-2 mt-1">•</span>
+                                      <span className="text-neutral-800 leading-6 flex-1">{note}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Award or Deduct */}
+                        <div className="mt-5">
+                          <div className="text-sm font-semibold text-neutral-700">Score this clue</div>
+                          <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-2">
+                            {teams.map((t, i) => (
+                              <div key={i} className="rounded-lg border p-2">
+                                <div className="text-sm font-medium">{t.name}</div>
+                                <div className="mt-1 flex items-center gap-2">
+                                  <button onClick={() => award(i, open.clue.value)} className="rounded bg-emerald-600 px-2 py-1 text-white hover:bg-emerald-500">+{money(open.clue.value)}</button>
+                                  <button onClick={() => award(i, -open.clue.value)} className="rounded bg-rose-600 px-2 py-1 text-white hover:bg-rose-500">-{money(open.clue.value)}</button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Lock tile */}
+                        <div className="mt-5 flex justify-end">
+                          <button onClick={lockTile} className="rounded-md bg-neutral-900 px-3 py-1.5 text-white hover:bg-neutral-700">Mark Tile Complete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <footer className="mt-6 text-blue-200 text-xs">Exact Jeopardy layout. Long clues and explanations for live teaching. No source lists shown.</footer>
+              </div>
+            </div>
+          );
+        }
+
+        // Render the app
+        ReactDOM.render(<HanJeopardy />, document.getElementById('root'));
+    </script>
+</body>
+</html>
