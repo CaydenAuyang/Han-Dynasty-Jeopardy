@@ -94,8 +94,7 @@ This is a static site that can be hosted on:
 Han-Dynasty-Jeopardy/
 ├── index.html              # Main application file
 ├── han_dynasty_jeopardy.html  # Alternative HTML file
-├── copy_of_han_dynasty_jeopardy_final.jsx  # JSX source file
-├── *.mp4                   # Video explanation files (1-20, Conclusive, etc.)
+├── *.mp4                   # Video explanation files (1-20)
 ├── README.md               # This file
 └── LICENSE                 # MIT License
 ```
